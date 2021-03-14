@@ -1,7 +1,1 @@
 node_modules
-dist
-coverage
-.env
-data
-!src/data
-globalConfig.json
