@@ -1,0 +1,27 @@
+version: "3"
+services: 
+  mongo:
+    container_name: twitter-client-mongo
+    image: mongo:4.2
+    volumes:
+      - ./data:/data/db:z
+    ports:
+      - "27017:27017"
+  api:
+    container_name: twitter-client
+    image: node:12
+    working_dir: /usr/src/twitter-client
+    command: bash -c "npm install --only=prod && npm start"
+    environment: 
+      - MONGO_URL=mongodb://mongo:27017/twitter-client
+    env_file: 
+      - .env
+    volumes: 
+      - ./dist/:/usr/src/twitter-client/dist/:z
+      - ./package.json:/usr/src/twitter-client/package.json:z
+    ports: 
+      - "3000:3000"
+      - "9222:9222"
+    links: 
+      - mongo
+
