@@ -1,6 +1,7 @@
 import { CreateUserController } from '@/presentation/controllers/create-user-controller'
 import { Validation, HttpRequest } from '@/presentation/protocols'
-import { mockValidation } from '@/tests/presentation/mocks'
+import { badRequest } from '@/presentation/helpers'
+import { mockValidation, mockValidationFailure } from '@/tests/presentation/mocks'
 import { mockCreateUserParams } from '@/tests/domain/mocks'
 
 type SutTypes = {
@@ -29,5 +30,13 @@ describe('CreateUserController', () => {
     const validateSpy = jest.spyOn(validationStub, 'validate')
     await sut.handle(mockHttpRequest())
     expect(validateSpy).toHaveBeenCalledWith(mockedCreateUserParams)
+  })
+
+  test('should return 400 if validation fails', async () => {
+    const { sut, validationStub } = makeSut()
+    const mockedValidationFailureResponse = mockValidationFailure()
+    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(mockedValidationFailureResponse)
+    const response = await sut.handle(mockHttpRequest())
+    expect(response).toEqual(badRequest(mockedValidationFailureResponse.errors))
   })
 })
