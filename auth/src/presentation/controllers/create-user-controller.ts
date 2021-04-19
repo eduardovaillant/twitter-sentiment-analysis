@@ -1,12 +1,13 @@
 import { Controller, HttpRequest, HttpResponse, Validation } from '@/presentation/protocols'
 import { badRequest, forbidden } from '@/presentation/helpers'
 import { EmailInUseError } from '@/presentation/errors'
-import { CreateUser } from '@/domain/usecases'
+import { Authentication, CreateUser } from '@/domain/usecases'
 
 export class CreateUserController implements Controller {
   constructor (
     private readonly validation: Validation,
-    private readonly createUser: CreateUser
+    private readonly createUser: CreateUser,
+    private readonly authentication: Authentication
   ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -17,9 +18,12 @@ export class CreateUserController implements Controller {
     }
     const created = await this.createUser.create(createUserParams)
     if (!created) {
-      console.log(forbidden(new EmailInUseError()))
       return forbidden(new EmailInUseError())
     }
+    await this.authentication.auth({
+      email: createUserParams.email,
+      password: createUserParams.password
+    })
     return null
   }
 }
