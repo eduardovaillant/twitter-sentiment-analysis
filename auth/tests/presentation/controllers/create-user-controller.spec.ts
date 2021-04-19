@@ -86,6 +86,13 @@ describe('CreateUserController', () => {
     })
   })
 
+  test('should return 500 if Authentication throws', async () => {
+    const { sut, authenticationSpy } = makeSut()
+    jest.spyOn(authenticationSpy, 'auth').mockImplementationOnce(() => { throw new Error() })
+    const response = await sut.handle(mockHttpRequest())
+    expect(response).toEqual(serverError(new Error()))
+  })
+
   test('should return 200 on success', async () => {
     const { sut, authenticationSpy } = makeSut()
     const response = await sut.handle(mockHttpRequest())
