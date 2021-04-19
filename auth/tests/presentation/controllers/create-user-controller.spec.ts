@@ -1,6 +1,6 @@
 import { CreateUserController } from '@/presentation/controllers/create-user-controller'
 import { Validation, HttpRequest } from '@/presentation/protocols'
-import { badRequest, forbidden, ok } from '@/presentation/helpers'
+import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers'
 import { EmailInUseError } from '@/presentation/errors'
 import { mockCreateUser, mockValidation, mockValidationFailure, AuthenticationSpy } from '@/tests/presentation/mocks'
 import { mockCreateUserParams } from '@/tests/domain/mocks'
@@ -38,6 +38,13 @@ describe('CreateUserController', () => {
     const validateSpy = jest.spyOn(validationStub, 'validate')
     await sut.handle(mockHttpRequest())
     expect(validateSpy).toHaveBeenCalledWith(mockedCreateUserParams)
+  })
+
+  test('should return 500 if Validation throws', async () => {
+    const { sut, validationStub } = makeSut()
+    jest.spyOn(validationStub, 'validate').mockImplementationOnce(() => { throw new Error() })
+    const response = await sut.handle(mockHttpRequest())
+    expect(response).toEqual(serverError(new Error()))
   })
 
   test('should return 400 if Validation fails', async () => {
