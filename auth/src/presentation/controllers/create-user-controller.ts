@@ -1,5 +1,5 @@
 import { Controller, HttpRequest, HttpResponse, Validation } from '@/presentation/protocols'
-import { badRequest, forbidden, ok } from '@/presentation/helpers'
+import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers'
 import { EmailInUseError } from '@/presentation/errors'
 import { Authentication, CreateUser } from '@/domain/usecases'
 
@@ -11,19 +11,23 @@ export class CreateUserController implements Controller {
   ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
-    const createUserParams = httpRequest.body
-    const result = this.validation.validate(createUserParams)
-    if (result.code === 400) {
-      return badRequest(result.errors)
+    try {
+      const createUserParams = httpRequest.body
+      const result = this.validation.validate(createUserParams)
+      if (result.code === 400) {
+        return badRequest(result.errors)
+      }
+      const created = await this.createUser.create(createUserParams)
+      if (!created) {
+        return forbidden(new EmailInUseError())
+      }
+      const authenticationResult = await this.authentication.auth({
+        email: createUserParams.email,
+        password: createUserParams.password
+      })
+      return ok(authenticationResult)
+    } catch (error) {
+      return serverError(error)
     }
-    const created = await this.createUser.create(createUserParams)
-    if (!created) {
-      return forbidden(new EmailInUseError())
-    }
-    const authenticationResult = await this.authentication.auth({
-      email: createUserParams.email,
-      password: createUserParams.password
-    })
-    return ok(authenticationResult)
   }
 }

@@ -1,4 +1,5 @@
 import { HttpResponse } from '@/presentation/protocols/http'
+import { ServerError } from '../errors'
 
 export const ok = (data: any): HttpResponse => (
   {
@@ -32,6 +33,19 @@ export const forbidden = (error: Error): HttpResponse => (
         type: error.name,
         messages: [error.message]
       }
+    }
+  }
+)
+
+export const serverError = (error: Error): HttpResponse => (
+  {
+    statusCode: 500,
+    body: {
+      code: 500,
+      type: 'ServerError',
+      errors: [
+        new ServerError(error.stack)
+      ]
     }
   }
 )
