@@ -1,6 +1,7 @@
 import { CreateUserController } from '@/presentation/controllers/create-user-controller'
 import { Validation, HttpRequest } from '@/presentation/protocols'
-import { badRequest } from '@/presentation/helpers'
+import { badRequest, forbidden } from '@/presentation/helpers'
+import { EmailInUseError } from '@/presentation/errors'
 import { mockCreateUser, mockValidation, mockValidationFailure } from '@/tests/presentation/mocks'
 import { mockCreateUserParams } from '@/tests/domain/mocks'
 import { CreateUser } from '@/domain/usecases/user'
@@ -46,8 +47,15 @@ describe('CreateUserController', () => {
 
   test('should call CreateUser with correct values', async () => {
     const { sut, createUserStub } = makeSut()
-    const validateSpy = jest.spyOn(createUserStub, 'create')
+    const createSpy = jest.spyOn(createUserStub, 'create')
     await sut.handle(mockHttpRequest())
-    expect(validateSpy).toHaveBeenCalledWith(mockedCreateUserParams)
+    expect(createSpy).toHaveBeenCalledWith(mockedCreateUserParams)
+  })
+
+  test('should return 403 if CreateUser returns false', async () => {
+    const { sut, createUserStub } = makeSut()
+    jest.spyOn(createUserStub, 'create').mockReturnValueOnce(Promise.resolve(false))
+    const response = await sut.handle(mockHttpRequest())
+    expect(response).toEqual(forbidden(new EmailInUseError()))
   })
 })
