@@ -40,19 +40,19 @@ describe('CreateUserController', () => {
     expect(validateSpy).toHaveBeenCalledWith(mockedCreateUserParams)
   })
 
-  test('should return 500 if Validation throws', async () => {
-    const { sut, validationStub } = makeSut()
-    jest.spyOn(validationStub, 'validate').mockImplementationOnce(() => { throw new Error() })
-    const response = await sut.handle(mockHttpRequest())
-    expect(response).toEqual(serverError(new Error()))
-  })
-
   test('should return 400 if Validation fails', async () => {
     const { sut, validationStub } = makeSut()
     const mockedValidationFailureResponse = mockValidationFailure()
     jest.spyOn(validationStub, 'validate').mockReturnValueOnce(mockedValidationFailureResponse)
     const response = await sut.handle(mockHttpRequest())
     expect(response).toEqual(badRequest(mockedValidationFailureResponse.errors))
+  })
+
+  test('should return 500 if Validation throws', async () => {
+    const { sut, validationStub } = makeSut()
+    jest.spyOn(validationStub, 'validate').mockImplementationOnce(() => { throw new Error() })
+    const response = await sut.handle(mockHttpRequest())
+    expect(response).toEqual(serverError(new Error()))
   })
 
   test('should call CreateUser with correct values', async () => {
@@ -67,6 +67,13 @@ describe('CreateUserController', () => {
     jest.spyOn(createUserStub, 'create').mockReturnValueOnce(Promise.resolve(false))
     const response = await sut.handle(mockHttpRequest())
     expect(response).toEqual(forbidden(new EmailInUseError()))
+  })
+
+  test('should return 500 if CreateUser throws', async () => {
+    const { sut, createUserStub } = makeSut()
+    jest.spyOn(createUserStub, 'create').mockImplementationOnce(() => { throw new Error() })
+    const response = await sut.handle(mockHttpRequest())
+    expect(response).toEqual(serverError(new Error()))
   })
 
   test('should call Authentication with correct values', async () => {
