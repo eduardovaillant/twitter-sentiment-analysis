@@ -1,5 +1,15 @@
 import { HttpResponse } from '@/presentation/protocols/http'
 
+export const ok = (data: any): HttpResponse => (
+  {
+    statusCode: 200,
+    body: {
+      code: 200,
+      data: data
+    }
+  }
+)
+
 export const badRequest = (errors: string[]): HttpResponse => (
   {
     statusCode: 400,

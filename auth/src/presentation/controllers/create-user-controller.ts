@@ -1,5 +1,5 @@
 import { Controller, HttpRequest, HttpResponse, Validation } from '@/presentation/protocols'
-import { badRequest, forbidden } from '@/presentation/helpers'
+import { badRequest, forbidden, ok } from '@/presentation/helpers'
 import { EmailInUseError } from '@/presentation/errors'
 import { Authentication, CreateUser } from '@/domain/usecases'
 
@@ -20,10 +20,10 @@ export class CreateUserController implements Controller {
     if (!created) {
       return forbidden(new EmailInUseError())
     }
-    await this.authentication.auth({
+    const authenticationResult = await this.authentication.auth({
       email: createUserParams.email,
       password: createUserParams.password
     })
-    return null
+    return ok(authenticationResult)
   }
 }
