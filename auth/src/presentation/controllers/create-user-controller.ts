@@ -1,7 +1,7 @@
 import { Controller, HttpRequest, HttpResponse, Validation } from '@/presentation/protocols'
 import { badRequest, forbidden } from '@/presentation/helpers'
 import { EmailInUseError } from '@/presentation/errors'
-import { CreateUser } from '@/domain/usecases/user'
+import { CreateUser } from '@/domain/usecases'
 
 export class CreateUserController implements Controller {
   constructor (

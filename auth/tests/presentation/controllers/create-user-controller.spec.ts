@@ -4,7 +4,7 @@ import { badRequest, forbidden } from '@/presentation/helpers'
 import { EmailInUseError } from '@/presentation/errors'
 import { mockCreateUser, mockValidation, mockValidationFailure } from '@/tests/presentation/mocks'
 import { mockCreateUserParams } from '@/tests/domain/mocks'
-import { CreateUser } from '@/domain/usecases/user'
+import { CreateUser } from '@/domain/usecases'
 
 type SutTypes = {
   sut: CreateUserController
