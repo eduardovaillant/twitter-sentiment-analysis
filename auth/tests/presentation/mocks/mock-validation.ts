@@ -2,17 +2,17 @@ import { Validation, ValidationResponse } from '@/presentation/protocols/validat
 
 import faker from 'faker'
 
-export const mockValidationReponseSuccess = (): ValidationResponse => (
+export const mockValidationSuccess = (): ValidationResponse => (
   {
     code: 200,
-    messages: null
+    errors: null
   }
 )
 
-export const mockValidationReponseFailure = (): ValidationResponse => (
+export const mockValidationFailure = (): ValidationResponse => (
   {
     code: 400,
-    messages: [
+    errors: [
       faker.datatype.string(30)
     ]
   }
@@ -21,7 +21,7 @@ export const mockValidationReponseFailure = (): ValidationResponse => (
 export const mockValidation = (): Validation => {
   class ValidationStub implements Validation {
     validate (input: any): ValidationResponse {
-      return mockValidationReponseSuccess()
+      return mockValidationSuccess()
     }
   }
   return new ValidationStub()

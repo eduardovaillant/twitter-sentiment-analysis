@@ -1,6 +1,6 @@
 export interface ValidationResponse {
   code: number
-  messages: string[]
+  errors: string[]
 }
 
 export interface Validation {
