@@ -2,24 +2,27 @@ import { CreateUserController } from '@/presentation/controllers/create-user-con
 import { Validation, HttpRequest } from '@/presentation/protocols'
 import { badRequest, forbidden } from '@/presentation/helpers'
 import { EmailInUseError } from '@/presentation/errors'
-import { mockCreateUser, mockValidation, mockValidationFailure } from '@/tests/presentation/mocks'
+import { mockCreateUser, mockValidation, mockValidationFailure, mockAuthentication } from '@/tests/presentation/mocks'
 import { mockCreateUserParams } from '@/tests/domain/mocks'
-import { CreateUser } from '@/domain/usecases'
+import { Authentication, CreateUser } from '@/domain/usecases'
 
 type SutTypes = {
   sut: CreateUserController
   validationStub: Validation
   createUserStub: CreateUser
+  authenticationStub: Authentication
 }
 
 const makeSut = (): SutTypes => {
   const validationStub = mockValidation()
   const createUserStub = mockCreateUser()
-  const sut = new CreateUserController(validationStub, createUserStub)
+  const authenticationStub = mockAuthentication()
+  const sut = new CreateUserController(validationStub, createUserStub, authenticationStub)
   return {
     sut,
     validationStub,
-    createUserStub
+    createUserStub,
+    authenticationStub
   }
 }
 
@@ -57,5 +60,15 @@ describe('CreateUserController', () => {
     jest.spyOn(createUserStub, 'create').mockReturnValueOnce(Promise.resolve(false))
     const response = await sut.handle(mockHttpRequest())
     expect(response).toEqual(forbidden(new EmailInUseError()))
+  })
+
+  test('should call Authentication with correct values', async () => {
+    const { sut, authenticationStub } = makeSut()
+    const authSpy = jest.spyOn(authenticationStub, 'auth')
+    await sut.handle(mockHttpRequest())
+    expect(authSpy).toHaveBeenCalledWith({
+      email: mockedCreateUserParams.email,
+      password: mockedCreateUserParams.password
+    })
   })
 })
