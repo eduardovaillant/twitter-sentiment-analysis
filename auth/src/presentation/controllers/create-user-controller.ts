@@ -1,9 +1,11 @@
 import { Controller, HttpRequest, HttpResponse, Validation } from '@/presentation/protocols'
 import { badRequest } from '@/presentation/helpers'
+import { CreateUser } from '@/domain/usecases/user'
 
 export class CreateUserController implements Controller {
   constructor (
-    private readonly validation: Validation
+    private readonly validation: Validation,
+    private readonly createUser: CreateUser
   ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
@@ -12,6 +14,7 @@ export class CreateUserController implements Controller {
     if (result.code === 400) {
       return badRequest(result.errors)
     }
-    return Promise.resolve(null)
+    await this.createUser.create(createUserParams)
+    return null
   }
 }

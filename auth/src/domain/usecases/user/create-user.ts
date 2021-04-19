@@ -1,4 +1,4 @@
-import { UserModel } from '@/domain/models/user-model'
+import { UserModel } from '@/domain/models'
 
 export type CreateUserParams = Omit<UserModel, 'id'>
 
