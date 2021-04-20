@@ -1,6 +1,6 @@
 import { CreateUser, CreateUserParams } from '@/domain/usecases'
+import { CreateUserRepository } from '@/data/protocols/db'
 import { Hasher } from '@/data/protocols/cryptography'
-import { CreateUserRepository } from '../protocols/db'
 
 export class DbCreateUser implements CreateUser {
   constructor (
