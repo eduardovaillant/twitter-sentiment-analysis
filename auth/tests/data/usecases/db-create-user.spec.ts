@@ -46,4 +46,11 @@ describe('DbCreateUser', () => {
       password: hasherSpy.digest
     })
   })
+
+  test('should throw if CreateUserRepository throws', async () => {
+    const { sut, createUserRepositoryStub } = makeSut()
+    jest.spyOn(createUserRepositoryStub, 'create').mockImplementationOnce(() => { throw new Error() })
+    const promise = sut.create(mockCreateUserParams())
+    await expect(promise).rejects.toThrow()
+  })
 })
