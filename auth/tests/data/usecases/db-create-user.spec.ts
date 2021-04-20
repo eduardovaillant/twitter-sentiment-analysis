@@ -1,22 +1,25 @@
 import { DbCreateUser } from '@/data/usecases'
-import { mockCreateUserRepository, HasherSpy } from '@/tests/data/mocks'
-import { CreateUserRepository } from '@/data/protocols/db'
+import { mockCreateUserRepository, HasherSpy, mockCheckUserByEmailRepository } from '@/tests/data/mocks'
+import { CreateUserRepository, CheckUserByEmailRepository } from '@/data/protocols/db'
 import { mockCreateUserParams } from '@/tests/domain/mocks'
 
 type SutTypes = {
   sut: DbCreateUser
   hasherSpy: HasherSpy
   createUserRepositoryStub: CreateUserRepository
+  checkUserByEmailRepositoryStub: CheckUserByEmailRepository
 }
 
 const makeSut = (): SutTypes => {
   const hasherSpy = new HasherSpy()
   const createUserRepositoryStub = mockCreateUserRepository()
-  const sut = new DbCreateUser(hasherSpy, createUserRepositoryStub)
+  const checkUserByEmailRepositoryStub = mockCheckUserByEmailRepository()
+  const sut = new DbCreateUser(hasherSpy, createUserRepositoryStub, checkUserByEmailRepositoryStub)
   return {
     sut,
     hasherSpy,
-    createUserRepositoryStub
+    createUserRepositoryStub,
+    checkUserByEmailRepositoryStub
   }
 }
 
@@ -52,5 +55,13 @@ describe('DbCreateUser', () => {
     jest.spyOn(createUserRepositoryStub, 'create').mockImplementationOnce(() => { throw new Error() })
     const promise = sut.create(mockCreateUserParams())
     await expect(promise).rejects.toThrow()
+  })
+
+  test('should call CheckUserByEmailRepository with correct email', async () => {
+    const { sut, checkUserByEmailRepositoryStub } = makeSut()
+    const checkByEmailSpy = jest.spyOn(checkUserByEmailRepositoryStub, 'checkByEmail')
+    const createUserParams = mockCreateUserParams()
+    await sut.create(createUserParams)
+    expect(checkByEmailSpy).toHaveBeenCalledWith(createUserParams.email)
   })
 })
