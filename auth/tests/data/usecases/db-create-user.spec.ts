@@ -1,28 +1,26 @@
-import { mockHasher } from '@/tests/data/mocks/mock-cryptography'
+import { HasherSpy } from '@/tests/data/mocks/mock-cryptography'
 import { DbCreateUser } from '@/data/usecases'
-import { Hasher } from '@/data/protocols/cryptography'
 import { mockCreateUserParams } from '@/tests/domain/mocks'
 
 type SutTypes = {
   sut: DbCreateUser
-  hasherStub: Hasher
+  hasherSpy: HasherSpy
 }
 
 const makeSut = (): SutTypes => {
-  const hasherStub = mockHasher()
-  const sut = new DbCreateUser(hasherStub)
+  const hasherSpy = new HasherSpy()
+  const sut = new DbCreateUser(hasherSpy)
   return {
     sut,
-    hasherStub
+    hasherSpy
   }
 }
 
 describe('DbCreateUser', () => {
-  test('should call Hasher with correct values', async () => {
-    const { sut, hasherStub } = makeSut()
-    const hashSpy = jest.spyOn(hasherStub, 'hash')
-    const mockedCreateUserParams = mockCreateUserParams()
-    await sut.create(mockedCreateUserParams)
-    expect(hashSpy).toHaveBeenCalledWith(mockedCreateUserParams.password)
+  test('should call Hasher with correct plaintext', async () => {
+    const { sut, hasherSpy } = makeSut()
+    const createUserParams = mockCreateUserParams()
+    await sut.create(createUserParams)
+    expect(hasherSpy.plaintext).toBe(createUserParams.password)
   })
 })
