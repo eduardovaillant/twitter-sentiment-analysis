@@ -1,4 +1,4 @@
-import { CreateUserParams } from '@/domain/usecases/user'
+import { CreateUserParams } from '@/domain/usecases'
 import { UserModel } from '@/domain/models'
 
 import faker from 'faker'

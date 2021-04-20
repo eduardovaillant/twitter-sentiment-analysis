@@ -1,9 +1,9 @@
+import { mockCreateUser, mockValidation, mockValidationFailure, AuthenticationSpy } from '@/tests/presentation/mocks'
+import { mockCreateUserParams } from '@/tests/domain/mocks'
 import { CreateUserController } from '@/presentation/controllers/create-user-controller'
 import { Validation, HttpRequest } from '@/presentation/protocols'
 import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers'
 import { EmailInUseError } from '@/presentation/errors'
-import { mockCreateUser, mockValidation, mockValidationFailure, AuthenticationSpy } from '@/tests/presentation/mocks'
-import { mockCreateUserParams } from '@/tests/domain/mocks'
 import { CreateUser } from '@/domain/usecases'
 
 type SutTypes = {

@@ -1,4 +1,4 @@
-import { CreateUser, CreateUserParams } from '@/domain/usecases/user'
+import { CreateUser, CreateUserParams } from '@/domain/usecases'
 
 export const mockCreateUser = (): CreateUser => {
   class CreateUserStub implements CreateUser {
