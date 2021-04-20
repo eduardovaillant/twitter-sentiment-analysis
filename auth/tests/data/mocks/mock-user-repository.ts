@@ -13,7 +13,7 @@ export const mockCreateUserRepository = (): CreateUserRepository => {
 export const mockCheckUserByEmailRepository = (): CheckUserByEmailRepository => {
   class CheckUserByEmailRepositoryStub implements CheckUserByEmailRepository {
     async checkByEmail (email: string): Promise<boolean> {
-      return Promise.resolve(true)
+      return Promise.resolve(false)
     }
   }
   return new CheckUserByEmailRepositoryStub()

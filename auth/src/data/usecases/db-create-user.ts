@@ -10,9 +10,12 @@ export class DbCreateUser implements CreateUser {
   ) {}
 
   async create (createUserParams: CreateUserParams): Promise<boolean> {
-    await this.checkUserByEmailRepository.checkByEmail(createUserParams.email)
-    const hashedPassoword = await this.hasher.hash(createUserParams.password)
-    await this.createUserRepository.create(Object.assign({}, createUserParams, { password: hashedPassoword }))
-    return true
+    const exists = await this.checkUserByEmailRepository.checkByEmail(createUserParams.email)
+    let isValid = false
+    if (!exists) {
+      const hashedPassoword = await this.hasher.hash(createUserParams.password)
+      isValid = await this.createUserRepository.create({ ...createUserParams, password: hashedPassoword })
+    }
+    return isValid
   }
 }
