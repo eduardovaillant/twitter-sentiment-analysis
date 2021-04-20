@@ -1,18 +1,22 @@
-import { HasherSpy } from '@/tests/data/mocks/mock-cryptography'
-import { mockCreateUserParams } from '@/tests/domain/mocks'
 import { DbCreateUser } from '@/data/usecases'
+import { mockCreateUserRepository, HasherSpy } from '@/tests/data/mocks'
+import { CreateUserRepository } from '@/data/protocols/db'
+import { mockCreateUserParams } from '@/tests/domain/mocks'
 
 type SutTypes = {
   sut: DbCreateUser
   hasherSpy: HasherSpy
+  createUserRepositoryStub: CreateUserRepository
 }
 
 const makeSut = (): SutTypes => {
   const hasherSpy = new HasherSpy()
-  const sut = new DbCreateUser(hasherSpy)
+  const createUserRepositoryStub = mockCreateUserRepository()
+  const sut = new DbCreateUser(hasherSpy, createUserRepositoryStub)
   return {
     sut,
-    hasherSpy
+    hasherSpy,
+    createUserRepositoryStub
   }
 }
 
@@ -29,5 +33,17 @@ describe('DbCreateUser', () => {
     jest.spyOn(hasherSpy, 'hash').mockImplementationOnce(() => { throw new Error() })
     const promise = sut.create(mockCreateUserParams())
     await expect(promise).rejects.toThrow()
+  })
+
+  test('should call CreateUserRepository with correct values', async () => {
+    const { sut, hasherSpy, createUserRepositoryStub } = makeSut()
+    const createSpy = jest.spyOn(createUserRepositoryStub, 'create')
+    const createUserParams = mockCreateUserParams()
+    await sut.create(createUserParams)
+    expect(createSpy).toHaveBeenCalledWith({
+      name: createUserParams.name,
+      email: createUserParams.email,
+      password: hasherSpy.digest
+    })
   })
 })
