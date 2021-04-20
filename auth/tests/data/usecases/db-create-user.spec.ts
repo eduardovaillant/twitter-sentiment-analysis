@@ -64,4 +64,12 @@ describe('DbCreateUser', () => {
     await sut.create(createUserParams)
     expect(checkByEmailSpy).toHaveBeenCalledWith(createUserParams.email)
   })
+
+  test('should return false if CheckUserByEmailRepository returns true', async () => {
+    const { sut, checkUserByEmailRepositoryStub } = makeSut()
+    jest.spyOn(checkUserByEmailRepositoryStub, 'checkByEmail').mockReturnValueOnce(Promise.resolve(true))
+    const createUserParams = mockCreateUserParams()
+    const result = await sut.create(createUserParams)
+    expect(result).toBe(false)
+  })
 })
