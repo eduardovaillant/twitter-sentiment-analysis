@@ -1,4 +1,4 @@
-import { CreateUserRepository } from '@/data/protocols/db'
+import { CheckUserByEmailRepository, CreateUserRepository } from '@/data/protocols/db'
 import { CreateUserParams } from '@/domain/usecases'
 
 export const mockCreateUserRepository = (): CreateUserRepository => {
@@ -8,4 +8,13 @@ export const mockCreateUserRepository = (): CreateUserRepository => {
     }
   }
   return new CreateUserRepositoryStub()
+}
+
+export const mockCheckUserByEmailRepository = (): CheckUserByEmailRepository => {
+  class CheckUserByEmailRepositoryStub implements CheckUserByEmailRepository {
+    async checkByEmail (email: string): Promise<boolean> {
+      return Promise.resolve(true)
+    }
+  }
+  return new CheckUserByEmailRepositoryStub()
 }
