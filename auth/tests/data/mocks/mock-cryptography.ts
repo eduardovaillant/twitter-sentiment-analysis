@@ -12,7 +12,7 @@ export class HasherSpy implements Hasher {
   }
 }
 
-export class HasheComparerSpy implements HashComparer {
+export class HashComparerSpy implements HashComparer {
   digest: string
   plaintext: string
 
