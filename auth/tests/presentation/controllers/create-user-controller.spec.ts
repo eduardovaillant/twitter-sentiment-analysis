@@ -1,6 +1,6 @@
 import { mockCreateUser, mockValidation, mockValidationFailure, AuthenticationSpy } from '@/tests/presentation/mocks'
 import { mockCreateUserParams } from '@/tests/domain/mocks'
-import { CreateUserController } from '@/presentation/controllers/create-user-controller'
+import { CreateUserController } from '@/presentation/controllers'
 import { Validation, HttpRequest } from '@/presentation/protocols'
 import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers'
 import { EmailInUseError } from '@/presentation/errors'

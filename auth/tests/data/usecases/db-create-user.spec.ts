@@ -1,7 +1,7 @@
-import { DbCreateUser } from '@/data/usecases'
 import { mockCreateUserRepository, HasherSpy, mockCheckUserByEmailRepository } from '@/tests/data/mocks'
-import { CreateUserRepository, CheckUserByEmailRepository } from '@/data/protocols/db'
 import { mockCreateUserParams } from '@/tests/domain/mocks'
+import { DbCreateUser } from '@/data/usecases'
+import { CreateUserRepository, CheckUserByEmailRepository } from '@/data/protocols/db'
 
 type SutTypes = {
   sut: DbCreateUser
