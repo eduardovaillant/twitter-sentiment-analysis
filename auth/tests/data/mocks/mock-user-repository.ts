@@ -21,11 +21,11 @@ export const mockCheckUserByEmailRepository = (): CheckUserByEmailRepository => 
   return new CheckUserByEmailRepositoryStub()
 }
 
-export const mockLoadUserByEmailRepository = (): LoadUserByEmailRepository => {
-  class LoadUserByEmailRepositoryStub implements LoadUserByEmailRepository {
-    async loadByEmail (email: string): Promise<UserModel> {
-      return Promise.resolve(mockUserModel())
-    }
+export class LoadUserByEmailRepositorySpy implements LoadUserByEmailRepository {
+  email: string
+  userModel = mockUserModel()
+  async loadByEmail (email: string): Promise<UserModel> {
+    this.email = email
+    return Promise.resolve(this.userModel)
   }
-  return new LoadUserByEmailRepositoryStub()
 }
