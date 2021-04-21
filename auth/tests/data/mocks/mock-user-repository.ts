@@ -1,5 +1,7 @@
-import { CheckUserByEmailRepository, CreateUserRepository } from '@/data/protocols/db'
+import { CheckUserByEmailRepository, CreateUserRepository, LoadUserByEmailRepository } from '@/data/protocols/db'
+import { UserModel } from '@/domain/models'
 import { CreateUserParams } from '@/domain/usecases'
+import { mockUserModel } from '@/tests/domain/mocks'
 
 export const mockCreateUserRepository = (): CreateUserRepository => {
   class CreateUserRepositoryStub implements CreateUserRepository {
@@ -17,4 +19,13 @@ export const mockCheckUserByEmailRepository = (): CheckUserByEmailRepository => 
     }
   }
   return new CheckUserByEmailRepositoryStub()
+}
+
+export const mockLoadUserByEmailRepository = (): LoadUserByEmailRepository => {
+  class LoadUserByEmailRepositoryStub implements LoadUserByEmailRepository {
+    async loadByEmail (email: string): Promise<UserModel> {
+      return Promise.resolve(mockUserModel())
+    }
+  }
+  return new LoadUserByEmailRepositoryStub()
 }
