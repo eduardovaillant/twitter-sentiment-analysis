@@ -1,11 +1,12 @@
 import { LoadUserByEmailRepository } from '@/data/protocols/db'
-import { HashComparer } from '@/data/protocols/cryptography'
+import { Encrypter, HashComparer } from '@/data/protocols/cryptography'
 import { Authentication } from '@/domain/usecases'
 
 export class DbAuthentication implements Authentication {
   constructor (
     private readonly loadUserByEmail: LoadUserByEmailRepository,
-    private readonly hashComparer: HashComparer
+    private readonly hashComparer: HashComparer,
+    private readonly encrypter: Encrypter
   ) {}
 
   async auth (authenticationParams: Authentication.Params): Promise<Authentication.Result> {
@@ -13,6 +14,7 @@ export class DbAuthentication implements Authentication {
     if (user) {
       const isValid = await this.hashComparer.compare(authenticationParams.password, user.password)
       if (isValid) {
+        await this.encrypter.encrypt(user.id)
         return
       }
     }
