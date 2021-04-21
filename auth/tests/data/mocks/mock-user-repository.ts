@@ -23,9 +23,9 @@ export const mockCheckUserByEmailRepository = (): CheckUserByEmailRepository => 
 
 export class LoadUserByEmailRepositorySpy implements LoadUserByEmailRepository {
   email: string
-  userModel = mockUserModel()
+  result = mockUserModel()
   async loadByEmail (email: string): Promise<UserModel> {
     this.email = email
-    return Promise.resolve(this.userModel)
+    return Promise.resolve(this.result)
   }
 }

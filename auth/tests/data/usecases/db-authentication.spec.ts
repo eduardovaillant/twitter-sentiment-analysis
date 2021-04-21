@@ -1,12 +1,11 @@
 import { HasheComparerSpy, LoadUserByEmailRepositorySpy } from '@/tests/data/mocks'
 import { mockAuthenticationParams } from '@/tests/domain/mocks'
 import { DbAuthentication } from '@/data/usecases'
-import { HashComparer } from '@/data/protocols/cryptography'
 
 type SutTypes = {
   sut: DbAuthentication
   loadUserByEmailRepositorySpy: LoadUserByEmailRepositorySpy
-  hashComparerSpy: HashComparer
+  hashComparerSpy: HasheComparerSpy
 }
 
 const makeSut = (): SutTypes => {
@@ -23,10 +22,9 @@ const makeSut = (): SutTypes => {
 describe('DbAuthentication', () => {
   test('should call LoadUserByEmailRepository with correct email', async () => {
     const { sut, loadUserByEmailRepositorySpy } = makeSut()
-    const loadByEmailSpy = jest.spyOn(loadUserByEmailRepositorySpy, 'loadByEmail')
     const authenticationParams = mockAuthenticationParams()
     await sut.auth(authenticationParams)
-    expect(loadByEmailSpy).toHaveBeenCalledWith(authenticationParams.email)
+    expect(loadUserByEmailRepositorySpy.email).toBe(authenticationParams.email)
   })
 
   test('should throw if LoadUserByEmailRepository throws', async () => {
@@ -38,17 +36,16 @@ describe('DbAuthentication', () => {
 
   test('should return null if no user was found', async () => {
     const { sut, loadUserByEmailRepositorySpy } = makeSut()
-    jest.spyOn(loadUserByEmailRepositorySpy, 'loadByEmail').mockReturnValueOnce(Promise.resolve(null))
-    const authenticationParams = mockAuthenticationParams()
-    const result = await sut.auth(authenticationParams)
+    loadUserByEmailRepositorySpy.result = null
+    const result = await sut.auth(mockAuthenticationParams())
     expect(result).toBeNull()
   })
 
   test('should call HashComparer with correct values', async () => {
     const { sut, hashComparerSpy, loadUserByEmailRepositorySpy } = makeSut()
-    const compareSpy = jest.spyOn(hashComparerSpy, 'compare')
     const authenticationParams = mockAuthenticationParams()
     await sut.auth(authenticationParams)
-    expect(compareSpy).toHaveBeenCalledWith(authenticationParams.password, loadUserByEmailRepositorySpy.userModel.password)
+    expect(hashComparerSpy.plaintext).toBe(authenticationParams.password)
+    expect(hashComparerSpy.digest).toBe(loadUserByEmailRepositorySpy.result.password)
   })
 })
