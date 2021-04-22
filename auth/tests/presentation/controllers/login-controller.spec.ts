@@ -1,8 +1,8 @@
-import { mockValidation } from '@/tests/presentation/mocks'
+import { mockValidation, mockValidationFailure } from '@/tests/presentation/mocks'
 import { mockAuthenticationParams } from '@/tests/domain/mocks'
 import { LoginController } from '@/presentation/controllers'
 import { HttpRequest, Validation } from '@/presentation/protocols'
-import { serverError } from '@/presentation/helpers'
+import { badRequest, serverError } from '@/presentation/helpers'
 
 const authenticationParams = mockAuthenticationParams()
 
@@ -30,6 +30,14 @@ describe('LoginController', () => {
     const validateSpy = jest.spyOn(validationStub, 'validate')
     await sut.handle(mockRequest())
     expect(validateSpy).toHaveBeenCalledWith(authenticationParams.email)
+  })
+
+  test('should return 400 if Validation fails', async () => {
+    const { sut, validationStub } = makeSut()
+    const validationFailure = mockValidationFailure()
+    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(validationFailure)
+    const response = await sut.handle(mockRequest())
+    expect(response).toEqual(badRequest(validationFailure.errors))
   })
 
   test('should return 500 if Validation throws', async () => {
