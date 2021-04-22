@@ -2,7 +2,7 @@ import { AuthenticationSpy, mockValidation, mockValidationFailure } from '@/test
 import { mockAuthenticationParams } from '@/tests/domain/mocks'
 import { LoginController } from '@/presentation/controllers'
 import { HttpRequest, Validation } from '@/presentation/protocols'
-import { badRequest, ok, serverError } from '@/presentation/helpers'
+import { badRequest, ok, serverError, unauthorized } from '@/presentation/helpers'
 
 const authenticationParams = mockAuthenticationParams()
 
@@ -61,6 +61,13 @@ describe('LoginController', () => {
     jest.spyOn(authenticationSpy, 'auth').mockImplementationOnce(() => { throw new Error() })
     const response = await sut.handle(mockRequest())
     expect(response).toEqual(serverError(new Error()))
+  })
+
+  test('should return 401 if Authentication returns null', async () => {
+    const { sut, authenticationSpy } = makeSut()
+    jest.spyOn(authenticationSpy, 'auth').mockReturnValueOnce(Promise.resolve(null))
+    const response = await sut.handle(mockRequest())
+    expect(response).toEqual(unauthorized())
   })
 
   test('should return 200 on success', async () => {
