@@ -1,5 +1,5 @@
 import { Controller, HttpRequest, HttpResponse, Validation } from '@/presentation/protocols'
-import { serverError } from '../helpers'
+import { badRequest, serverError } from '@/presentation/helpers'
 
 export class LoginController implements Controller {
   constructor (
@@ -9,7 +9,10 @@ export class LoginController implements Controller {
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       const authenticationParams = httpRequest.body
-      this.validation.validate(authenticationParams.email)
+      const result = this.validation.validate(authenticationParams.email)
+      if (result.code === 400) {
+        return badRequest(result.errors)
+      }
       return Promise.resolve(null)
     } catch (error) {
       return serverError(error)
