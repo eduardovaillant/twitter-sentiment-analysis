@@ -1,4 +1,4 @@
-import { mockValidation, mockValidationFailure } from '@/tests/presentation/mocks'
+import { AuthenticationSpy, mockValidation, mockValidationFailure } from '@/tests/presentation/mocks'
 import { mockAuthenticationParams } from '@/tests/domain/mocks'
 import { LoginController } from '@/presentation/controllers'
 import { HttpRequest, Validation } from '@/presentation/protocols'
@@ -13,14 +13,17 @@ const mockRequest = (): HttpRequest => ({
 type SutTypes = {
   sut: LoginController
   validationStub: Validation
+  authenticationSpy: AuthenticationSpy
 }
 
 const makeSut = (): SutTypes => {
   const validationStub = mockValidation()
-  const sut = new LoginController(validationStub)
+  const authenticationSpy = new AuthenticationSpy()
+  const sut = new LoginController(validationStub, authenticationSpy)
   return {
     sut,
-    validationStub
+    validationStub,
+    authenticationSpy
   }
 }
 
@@ -45,5 +48,11 @@ describe('LoginController', () => {
     jest.spyOn(validationStub, 'validate').mockImplementationOnce(() => { throw new Error() })
     const response = await sut.handle(mockRequest())
     expect(response).toEqual(serverError(new Error()))
+  })
+
+  test('should call Authentication with correct values', async () => {
+    const { sut, authenticationSpy } = makeSut()
+    await sut.handle(mockRequest())
+    expect(authenticationSpy.authenticationParams).toEqual(authenticationParams)
   })
 })
