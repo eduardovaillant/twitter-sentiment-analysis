@@ -2,6 +2,7 @@ import { mockValidation } from '@/tests/presentation/mocks'
 import { mockAuthenticationParams } from '@/tests/domain/mocks'
 import { LoginController } from '@/presentation/controllers'
 import { HttpRequest, Validation } from '@/presentation/protocols'
+import { serverError } from '@/presentation/helpers'
 
 const authenticationParams = mockAuthenticationParams()
 
@@ -24,10 +25,17 @@ const makeSut = (): SutTypes => {
 }
 
 describe('LoginController', () => {
-  test('should call validation with correct values', async () => {
+  test('should call Validation with correct values', async () => {
     const { sut, validationStub } = makeSut()
     const validateSpy = jest.spyOn(validationStub, 'validate')
     await sut.handle(mockRequest())
     expect(validateSpy).toHaveBeenCalledWith(authenticationParams.email)
+  })
+
+  test('should return 500 if Validation throws', async () => {
+    const { sut, validationStub } = makeSut()
+    jest.spyOn(validationStub, 'validate').mockImplementationOnce(() => { throw new Error() })
+    const response = await sut.handle(mockRequest())
+    expect(response).toEqual(serverError(new Error()))
   })
 })
