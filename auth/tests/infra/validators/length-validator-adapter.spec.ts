@@ -23,4 +23,11 @@ describe('LengthValidatorAdapter', () => {
     sut.isLength(input, range)
     expect(isLengthSpy).toHaveBeenCalledWith(input, range)
   })
+
+  test('should return false if validator returns false', () => {
+    const sut = makeSut()
+    jest.spyOn(validator, 'isLength').mockReturnValueOnce(false)
+    const isValid = sut.isLength(faker.random.word(), range)
+    expect(isValid).toBe(false)
+  })
 })
