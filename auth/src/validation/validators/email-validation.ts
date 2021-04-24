@@ -7,7 +7,13 @@ export class EmailValidation implements Validation {
   ) {}
 
   validate (input: any): ValidationResponse {
-    this.emailValidator.isValid(input)
+    const isValid = this.emailValidator.isValid(input.email)
+    if (!isValid) {
+      return {
+        code: 400,
+        errors: ['Invalid email!']
+      }
+    }
     return null
   }
 }

@@ -1,7 +1,7 @@
 import { EmailValidator } from '@/validation/protocols'
 
 export class EmailValidatorSpy implements EmailValidator {
-  isValidEmail: true
+  isValidEmail = true
   email: string
 
   isValid (email: string): boolean {
