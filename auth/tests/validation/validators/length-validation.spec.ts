@@ -36,4 +36,10 @@ describe('LengthValidation', () => {
     const error = sut.validate(input)
     expect(error).toEqual(new InvalidLengthError(fieldName, range.min, range.max))
   })
+
+  test('should throw if LengthValidator throws', () => {
+    const { sut, lengthValidatorSpy } = makeSut()
+    jest.spyOn(lengthValidatorSpy, 'isLength').mockImplementationOnce(() => { throw new Error() })
+    expect(sut.validate).toThrow()
+  })
 })
