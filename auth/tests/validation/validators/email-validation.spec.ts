@@ -32,4 +32,10 @@ describe('EmailValidation', () => {
     expect(result.code).toBe(400)
     expect(result.errors[0]).toBe('Invalid email!')
   })
+
+  test('should return 200 if EmailValidator returns true', () => {
+    const { sut } = makeSut()
+    const result = sut.validate(faker.internet.email())
+    expect(result.code).toBe(200)
+  })
 })
