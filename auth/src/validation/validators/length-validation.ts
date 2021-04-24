@@ -1,6 +1,6 @@
 import { LengthValidator, Range } from '@/validation/protocols'
 import { Validation } from '@/presentation/protocols'
-import { InvalidLengthError } from '@/presentation/errors/invalid-length-error'
+import { InvalidLengthError } from '@/presentation/errors'
 
 export class LengthValidation implements Validation {
   constructor (
