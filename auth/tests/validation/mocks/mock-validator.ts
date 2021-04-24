@@ -5,7 +5,7 @@ export class LengthValidatorSpy implements LengthValidator {
   input: string
   isValidLength = true
 
-  isLength (range: Range, input: string): boolean {
+  isLength (input: string, range: Range): boolean {
     this.input = input
     this.range = range
     return this.isValidLength

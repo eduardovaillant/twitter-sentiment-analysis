@@ -10,7 +10,7 @@ export class LengthValidation implements Validation {
   ) {}
 
   validate (input: any): Error {
-    const isLength = this.lengthValidator.isLength(this.range, input)
+    const isLength = this.lengthValidator.isLength(input, this.range)
     if (!isLength) {
       return new InvalidLengthError(this.fieldName, this.range.min, this.range.max)
     }
