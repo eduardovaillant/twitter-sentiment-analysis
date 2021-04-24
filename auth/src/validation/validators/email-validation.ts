@@ -14,6 +14,9 @@ export class EmailValidation implements Validation {
         errors: ['Invalid email!']
       }
     }
-    return null
+    return {
+      code: 200,
+      errors: null
+    }
   }
 }
