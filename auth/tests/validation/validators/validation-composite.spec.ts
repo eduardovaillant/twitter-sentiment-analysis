@@ -30,4 +30,10 @@ describe('ValidationComposite', () => {
     const result = sut.validate({ [field]: faker.random.word() })
     expect(result.code).toBe(400)
   })
+
+  test('should return 200 on success', () => {
+    const { sut } = makeSut()
+    const result = sut.validate({ [field]: faker.random.word() })
+    expect(result.code).toBe(200)
+  })
 })
