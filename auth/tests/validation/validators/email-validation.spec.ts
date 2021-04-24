@@ -38,4 +38,10 @@ describe('EmailValidation', () => {
     const result = sut.validate(faker.internet.email())
     expect(result.code).toBe(200)
   })
+
+  test('should throw if EmailValidator throws', () => {
+    const { sut, emailValidatorSpy } = makeSut()
+    jest.spyOn(emailValidatorSpy, 'isValid').mockImplementationOnce(() => { throw new Error() })
+    expect(sut.validate).toThrow()
+  })
 })
