@@ -1,6 +1,6 @@
-import { InvalidLengthError } from '@/presentation/errors/invalid-length-error'
 import { LengthValidatorSpy } from '@/tests/validation/mocks'
 import { LengthValidation } from '@/validation/validators'
+import { InvalidLengthError } from '@/presentation/errors/invalid-length-error'
 
 import faker from 'faker'
 
