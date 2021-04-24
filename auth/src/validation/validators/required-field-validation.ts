@@ -12,5 +12,9 @@ export class RequiredFieldValidation implements Validation {
         errors: [`Missing param: '${this.fieldName}'`]
       }
     }
+    return {
+      code: 200,
+      errors: null
+    }
   }
 }
