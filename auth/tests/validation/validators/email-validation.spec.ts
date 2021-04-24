@@ -21,7 +21,15 @@ describe('EmailValidation', () => {
   test('should call EmailValidator with correct value', () => {
     const { sut, emailValidatorSpy } = makeSut()
     const email = faker.internet.email()
-    sut.validate(email)
+    sut.validate({ email })
     expect(emailValidatorSpy.email).toBe(email)
+  })
+
+  test('should return 400 if EmailValidator returns false', () => {
+    const { sut, emailValidatorSpy } = makeSut()
+    emailValidatorSpy.isValidEmail = false
+    const result = sut.validate(faker.internet.email())
+    expect(result.code).toBe(400)
+    expect(result.errors[0]).toBe('Invalid email!')
   })
 })
