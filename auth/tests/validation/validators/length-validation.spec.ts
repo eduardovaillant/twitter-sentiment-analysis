@@ -1,8 +1,10 @@
+import { InvalidLengthError } from '@/presentation/errors/invalid-length-error'
 import { LengthValidatorSpy } from '@/tests/validation/mocks'
 import { LengthValidation } from '@/validation/validators'
 
 import faker from 'faker'
 
+const fieldName = faker.random.word()
 const input = faker.random.word()
 const range = { min: 1, max: 2 }
 
@@ -13,7 +15,7 @@ type SutTypes = {
 
 const makeSut = (): SutTypes => {
   const lengthValidatorSpy = new LengthValidatorSpy()
-  const sut = new LengthValidation(range, lengthValidatorSpy)
+  const sut = new LengthValidation(fieldName, range, lengthValidatorSpy)
   return {
     sut,
     lengthValidatorSpy
@@ -26,5 +28,12 @@ describe('LengthValidation', () => {
     sut.validate(input)
     expect(lengthValidatorSpy.input).toBe(input)
     expect(lengthValidatorSpy.range).toBe(range)
+  })
+
+  test('should return an InvalidLengthError if LengthValidator returns false', () => {
+    const { sut, lengthValidatorSpy } = makeSut()
+    lengthValidatorSpy.isValidLength = false
+    const error = sut.validate(input)
+    expect(error).toEqual(new InvalidLengthError(fieldName, range.min, range.max))
   })
 })
