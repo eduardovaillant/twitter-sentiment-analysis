@@ -31,9 +31,15 @@ describe('LengthValidatorAdapter', () => {
     expect(isValid).toBe(false)
   })
 
-  test('Should return true if validator returns true', () => {
+  test('should return true if validator returns true', () => {
     const sut = makeSut()
     const isValid = sut.isLength(faker.random.word(), range)
     expect(isValid).toBe(true)
+  })
+
+  test('should throw if validator throws', () => {
+    const sut = makeSut()
+    jest.spyOn(validator, 'isLength').mockImplementationOnce(() => { throw new Error() })
+    expect(sut.isLength).toThrow()
   })
 })
