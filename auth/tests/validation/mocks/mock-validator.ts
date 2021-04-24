@@ -1,4 +1,4 @@
-import { LengthValidator, Range } from '@/validation/protocols'
+import { EmailValidator, LengthValidator, Range } from '@/validation/protocols'
 
 export class LengthValidatorSpy implements LengthValidator {
   range: Range
@@ -9,5 +9,15 @@ export class LengthValidatorSpy implements LengthValidator {
     this.input = input
     this.range = range
     return this.isValidLength
+  }
+}
+
+export class EmailValidatorSpy implements EmailValidator {
+  isValidEmail = true
+  email: string
+
+  isValid (email: string): boolean {
+    this.email = email
+    return this.isValidEmail
   }
 }
