@@ -12,5 +12,9 @@ export class ValidationComposite implements Validation {
         return error
       }
     }
+    return {
+      code: 200,
+      errors: null
+    }
   }
 }
