@@ -4,5 +4,5 @@ export type Range = {
 }
 
 export interface LengthValidator {
-  isLength: (range: Range, input: string) => boolean
+  isLength: (input: string, range: Range) => boolean
 }
