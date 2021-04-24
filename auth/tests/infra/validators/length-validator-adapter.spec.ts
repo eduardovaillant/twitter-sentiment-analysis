@@ -30,4 +30,10 @@ describe('LengthValidatorAdapter', () => {
     const isValid = sut.isLength(faker.random.word(), range)
     expect(isValid).toBe(false)
   })
+
+  test('Should return true if validator returns true', () => {
+    const sut = makeSut()
+    const isValid = sut.isLength(faker.random.word(), range)
+    expect(isValid).toBe(true)
+  })
 })
