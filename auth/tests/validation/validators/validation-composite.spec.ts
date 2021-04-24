@@ -1,6 +1,6 @@
-import { mockValidation, mockValidationFailure } from '@/tests/presentation/mocks'
+import { ValidationSpy } from '@/tests/presentation/mocks'
 import { ValidationComposite } from '@/validation/validators'
-import { Validation } from '@/presentation/protocols'
+import { MissingParamError } from '@/presentation/errors'
 
 import faker from 'faker'
 
@@ -8,32 +8,40 @@ const field = faker.random.word()
 
 type SutTypes = {
   sut: ValidationComposite
-  validationStubs: Validation[]
+  validationSpies: ValidationSpy[]
 }
 
 const makeSut = (): SutTypes => {
-  const validationStubs = [
-    mockValidation(),
-    mockValidation()
+  const validationSpies = [
+    new ValidationSpy(),
+    new ValidationSpy()
   ]
-  const sut = new ValidationComposite(validationStubs)
+  const sut = new ValidationComposite(validationSpies)
   return {
     sut,
-    validationStubs
+    validationSpies
   }
 }
 
 describe('ValidationComposite', () => {
-  test('should return 400 if any validation fails', () => {
-    const { sut, validationStubs } = makeSut()
-    jest.spyOn(validationStubs[1], 'validate').mockReturnValueOnce(mockValidationFailure())
-    const result = sut.validate({ [field]: faker.random.word() })
-    expect(result.code).toBe(400)
+  test('Should return an error if any validation fails', () => {
+    const { sut, validationSpies } = makeSut()
+    validationSpies[1].error = new MissingParamError(field)
+    const error = sut.validate({ [field]: faker.random.word() })
+    expect(error).toEqual(validationSpies[1].error)
   })
 
-  test('should return 200 on success', () => {
+  test('Should return the first error if more then one validation fails', () => {
+    const { sut, validationSpies } = makeSut()
+    validationSpies[0].error = new Error()
+    validationSpies[1].error = new MissingParamError(field)
+    const error = sut.validate({ [field]: faker.random.word() })
+    expect(error).toEqual(validationSpies[0].error)
+  })
+
+  test('Should not return if validation succeeds', () => {
     const { sut } = makeSut()
-    const result = sut.validate({ [field]: faker.random.word() })
-    expect(result.code).toBe(200)
+    const error = sut.validate({ [field]: faker.random.word() })
+    expect(error).toBeFalsy()
   })
 })

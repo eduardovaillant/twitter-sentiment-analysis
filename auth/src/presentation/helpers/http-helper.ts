@@ -11,14 +11,17 @@ export const ok = (data: any): HttpResponse => (
   }
 )
 
-export const badRequest = (errors: string[]): HttpResponse => (
+export const badRequest = (error: Error): HttpResponse => (
   {
     statusCode: 400,
     body: {
       code: 400,
       error: {
         type: 'ValidationError',
-        messages: errors
+        error: {
+          type: error.name,
+          message: error.message
+        }
       }
     }
   }
@@ -31,7 +34,7 @@ export const unauthorized = (): HttpResponse => (
       code: 401,
       error: {
         type: 'UnauthorizedError',
-        messages: [new UnauthorizedError().message]
+        message: new UnauthorizedError().message
       }
     }
   }
@@ -44,7 +47,7 @@ export const forbidden = (error: Error): HttpResponse => (
       code: 403,
       error: {
         type: error.name,
-        messages: [error.message]
+        message: error.message
       }
     }
   }
@@ -55,10 +58,10 @@ export const serverError = (error: Error): HttpResponse => (
     statusCode: 500,
     body: {
       code: 500,
-      type: 'ServerError',
-      errors: [
-        new ServerError(error.stack)
-      ]
+      error: {
+        type: 'ServerError',
+        stack: new ServerError(error.stack)
+      }
     }
   }
 )

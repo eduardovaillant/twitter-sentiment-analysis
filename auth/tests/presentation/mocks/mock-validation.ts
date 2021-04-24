@@ -1,28 +1,11 @@
-import { Validation, ValidationResponse } from '@/presentation/protocols/validation'
+import { Validation } from '@/presentation/protocols'
 
-import faker from 'faker'
+export class ValidationSpy implements Validation {
+  error: Error = null
+  input: any
 
-export const mockValidationSuccess = (): ValidationResponse => (
-  {
-    code: 200,
-    errors: null
+  validate (input: any): Error {
+    this.input = input
+    return this.error
   }
-)
-
-export const mockValidationFailure = (): ValidationResponse => (
-  {
-    code: 400,
-    errors: [
-      faker.datatype.string(30)
-    ]
-  }
-)
-
-export const mockValidation = (): Validation => {
-  class ValidationStub implements Validation {
-    validate (input: any): ValidationResponse {
-      return mockValidationSuccess()
-    }
-  }
-  return new ValidationStub()
 }

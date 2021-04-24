@@ -1,20 +1,14 @@
-import { Validation, ValidationResponse } from '@/presentation/protocols'
+import { MissingParamError } from '@/presentation/errors'
+import { Validation } from '@/presentation/protocols'
 
 export class RequiredFieldValidation implements Validation {
   constructor (
     private readonly fieldName: string
   ) {}
 
-  validate (input: any): ValidationResponse {
+  validate (input: any): Error {
     if (!input[this.fieldName]) {
-      return {
-        code: 400,
-        errors: [`Missing param: '${this.fieldName}'`]
-      }
-    }
-    return {
-      code: 200,
-      errors: null
+      return new MissingParamError(this.fieldName)
     }
   }
 }

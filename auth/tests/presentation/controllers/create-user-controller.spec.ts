@@ -1,26 +1,26 @@
-import { mockCreateUser, mockValidation, mockValidationFailure, AuthenticationSpy } from '@/tests/presentation/mocks'
+import { mockCreateUser, AuthenticationSpy, ValidationSpy } from '@/tests/presentation/mocks'
 import { mockCreateUserParams } from '@/tests/domain/mocks'
 import { CreateUserController } from '@/presentation/controllers'
-import { Validation, HttpRequest } from '@/presentation/protocols'
+import { HttpRequest } from '@/presentation/protocols'
 import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers'
 import { EmailInUseError } from '@/presentation/errors'
 import { CreateUser } from '@/domain/usecases'
 
 type SutTypes = {
   sut: CreateUserController
-  validationStub: Validation
+  validationSpy: ValidationSpy
   createUserStub: CreateUser
   authenticationSpy: AuthenticationSpy
 }
 
 const makeSut = (): SutTypes => {
-  const validationStub = mockValidation()
+  const validationSpy = new ValidationSpy()
   const createUserStub = mockCreateUser()
   const authenticationSpy = new AuthenticationSpy()
-  const sut = new CreateUserController(validationStub, createUserStub, authenticationSpy)
+  const sut = new CreateUserController(validationSpy, createUserStub, authenticationSpy)
   return {
     sut,
-    validationStub,
+    validationSpy,
     createUserStub,
     authenticationSpy
   }
@@ -34,23 +34,21 @@ const mockHttpRequest = (): HttpRequest => ({
 
 describe('CreateUserController', () => {
   test('should call Validation with correct values', async () => {
-    const { sut, validationStub } = makeSut()
-    const validateSpy = jest.spyOn(validationStub, 'validate')
+    const { sut, validationSpy } = makeSut()
     await sut.handle(mockHttpRequest())
-    expect(validateSpy).toHaveBeenCalledWith(mockedCreateUserParams)
+    expect(validationSpy.input).toEqual(mockedCreateUserParams)
   })
 
   test('should return 400 if Validation fails', async () => {
-    const { sut, validationStub } = makeSut()
-    const mockedValidationFailureResponse = mockValidationFailure()
-    jest.spyOn(validationStub, 'validate').mockReturnValueOnce(mockedValidationFailureResponse)
+    const { sut, validationSpy } = makeSut()
+    validationSpy.error = new Error()
     const response = await sut.handle(mockHttpRequest())
-    expect(response).toEqual(badRequest(mockedValidationFailureResponse.errors))
+    expect(response).toEqual(badRequest(validationSpy.error))
   })
 
   test('should return 500 if Validation throws', async () => {
-    const { sut, validationStub } = makeSut()
-    jest.spyOn(validationStub, 'validate').mockImplementationOnce(() => { throw new Error() })
+    const { sut, validationSpy } = makeSut()
+    jest.spyOn(validationSpy, 'validate').mockImplementationOnce(() => { throw new Error() })
     const response = await sut.handle(mockHttpRequest())
     expect(response).toEqual(serverError(new Error()))
   })

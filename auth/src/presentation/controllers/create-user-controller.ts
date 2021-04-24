@@ -13,9 +13,9 @@ export class CreateUserController implements Controller {
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       const createUserParams = httpRequest.body
-      const result = this.validation.validate(createUserParams)
-      if (result.code === 400) {
-        return badRequest(result.errors)
+      const error = this.validation.validate(createUserParams)
+      if (error) {
+        return badRequest(error)
       }
       const created = await this.createUser.create(createUserParams)
       if (!created) {

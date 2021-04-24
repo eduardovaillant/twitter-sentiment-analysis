@@ -1,22 +1,16 @@
 import { EmailValidator } from '@/validation/protocols'
-import { Validation, ValidationResponse } from '@/presentation/protocols'
+import { Validation } from '@/presentation/protocols'
+import { InvalidParamError } from '@/presentation/errors'
 
 export class EmailValidation implements Validation {
   constructor (
     private readonly emailValidator: EmailValidator
   ) {}
 
-  validate (input: any): ValidationResponse {
+  validate (input: any): Error {
     const isValid = this.emailValidator.isValid(input.email)
     if (!isValid) {
-      return {
-        code: 400,
-        errors: ['Invalid email!']
-      }
-    }
-    return {
-      code: 200,
-      errors: null
+      return new InvalidParamError('email')
     }
   }
 }

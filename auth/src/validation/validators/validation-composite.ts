@@ -1,20 +1,16 @@
-import { Validation, ValidationResponse } from '@/presentation/protocols'
+import { Validation } from '@/presentation/protocols'
 
 export class ValidationComposite implements Validation {
   constructor (
     private readonly validations: Validation[]
   ) {}
 
-  validate (input: any): ValidationResponse {
+  validate (input: any): Error {
     for (const validation of this.validations) {
       const error = validation.validate(input)
-      if (error.code === 400) {
+      if (error) {
         return error
       }
-    }
-    return {
-      code: 200,
-      errors: null
     }
   }
 }

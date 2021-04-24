@@ -11,9 +11,9 @@ export class LoginController implements Controller {
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       const authenticationParams = httpRequest.body
-      const validationResult = this.validation.validate(authenticationParams.email)
-      if (validationResult.code === 400) {
-        return badRequest(validationResult.errors)
+      const error = this.validation.validate(authenticationParams)
+      if (error) {
+        return badRequest(error)
       }
       const authenticationResult = await this.authentication.auth(authenticationParams)
       if (!authenticationResult) {
