@@ -23,10 +23,25 @@ describe('UserMongoRepository', () => {
     await usersCollection.deleteMany({})
   })
 
-  test('should return true on success', async () => {
-    const sut = makeSut()
-    const createUserParams = mockCreateUserParams()
-    const isValid = await sut.create(createUserParams)
-    expect(isValid).toBe(true)
+  describe('create()', () => {
+    test('should return true on success', async () => {
+      const sut = makeSut()
+      const createUserParams = mockCreateUserParams()
+      const isValid = await sut.create(createUserParams)
+      expect(isValid).toBe(true)
+    })
+  })
+
+  describe('loadByEmail()', () => {
+    test('should return an user on success', async () => {
+      const sut = makeSut()
+      const createUserParams = mockCreateUserParams()
+      await usersCollection.insertOne(createUserParams)
+      const user = await sut.loadByEmail(createUserParams.email)
+      expect(user).toBeTruthy()
+      expect(user.id).toBeTruthy()
+      expect(user.name).toBe(createUserParams.name)
+      expect(user.password).toBe(createUserParams.password)
+    })
   })
 })
