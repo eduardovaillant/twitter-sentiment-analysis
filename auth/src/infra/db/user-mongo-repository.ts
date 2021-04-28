@@ -1,9 +1,9 @@
 import { MongoHelper } from '@/infra/db/mongo-helper'
-import { CreateUserRepository, LoadUserByEmailRepository } from '@/data/protocols/db'
+import { CheckUserByEmailRepository, CreateUserRepository, LoadUserByEmailRepository } from '@/data/protocols/db'
 import { CreateUserParams } from '@/domain/usecases'
 import { UserModel } from '@/domain/models'
 
-export class UserMongoRepository implements CreateUserRepository, LoadUserByEmailRepository {
+export class UserMongoRepository implements CreateUserRepository, LoadUserByEmailRepository, CheckUserByEmailRepository {
   async create (createUserParams: CreateUserParams): Promise<boolean> {
     const usersCollection = await MongoHelper.getCollection('users')
     const result = await usersCollection.insertOne(createUserParams)
@@ -21,5 +21,18 @@ export class UserMongoRepository implements CreateUserRepository, LoadUserByEmai
       }
     })
     return user && MongoHelper.map(user)
+  }
+
+  async checkByEmail (email: string): Promise<boolean> {
+    const usersCollection = await MongoHelper.getCollection('users')
+    const user = await usersCollection.findOne({
+      email
+    }, {
+      projection: {
+        _id: 1
+      }
+    }
+    )
+    return user !== null
   }
 }
