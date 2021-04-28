@@ -51,4 +51,14 @@ describe('UserMongoRepository', () => {
       expect(user).toBeFalsy()
     })
   })
+
+  describe('checkByEmail()', () => {
+    test('should return true if email exists', async () => {
+      const sut = makeSut()
+      const createUserParams = mockCreateUserParams()
+      await usersCollection.insertOne(createUserParams)
+      const exists = await sut.checkByEmail(createUserParams.email)
+      expect(exists).toBe(true)
+    })
+  })
 })
