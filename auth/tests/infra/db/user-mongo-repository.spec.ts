@@ -1,6 +1,7 @@
 import { MongoHelper, UserMongoRepository } from '@/infra/db'
 import { mockCreateUserParams } from '@/tests/domain/mocks'
 
+import faker from 'faker'
 import { Collection } from 'mongodb'
 
 let usersCollection: Collection
@@ -42,6 +43,12 @@ describe('UserMongoRepository', () => {
       expect(user.id).toBeTruthy()
       expect(user.name).toBe(createUserParams.name)
       expect(user.password).toBe(createUserParams.password)
+    })
+
+    test('should return null if loadByEmail fails', async () => {
+      const sut = makeSut()
+      const user = await sut.loadByEmail(faker.internet.email())
+      expect(user).toBeFalsy()
     })
   })
 })
