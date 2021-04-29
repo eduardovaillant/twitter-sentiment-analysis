@@ -27,6 +27,7 @@ export class CreateUserController implements Controller {
       })
       return ok(authenticationResult)
     } catch (error) {
+      console.error(error)
       return serverError(error)
     }
   }
