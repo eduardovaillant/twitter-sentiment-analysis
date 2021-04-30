@@ -11,6 +11,7 @@ let usersCollection: Collection
 describe('UserRoutes', () => {
   beforeAll(async () => {
     await MongoHelper.connect(process.env.MONGO_URL)
+    usersCollection = await MongoHelper.getCollection('users')
   })
 
   afterAll(async () => {
@@ -18,7 +19,6 @@ describe('UserRoutes', () => {
   })
 
   beforeEach(async () => {
-    usersCollection = await MongoHelper.getCollection('users')
     await usersCollection.deleteMany({})
   })
 
@@ -58,6 +58,16 @@ describe('UserRoutes', () => {
           password: '123'
         })
         .expect(200)
+    })
+
+    test('should return 401 on login', async () => {
+      await request(app)
+        .post('/api/auth')
+        .send({
+          email: 'eduardo@gmail.com',
+          password: '123'
+        })
+        .expect(401)
     })
   })
 })
