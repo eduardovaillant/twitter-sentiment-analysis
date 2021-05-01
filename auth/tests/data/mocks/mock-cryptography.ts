@@ -1,4 +1,4 @@
-import { Encrypter, HashComparer, Hasher } from '@/data/protocols/cryptography'
+import { Encrypter, HashComparer, Hasher } from '@/data/protocols'
 
 import faker from 'faker'
 

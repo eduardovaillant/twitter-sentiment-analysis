@@ -1,5 +1,5 @@
-import { Authentication, CreateUserParams } from '@/domain/usecases'
 import { UserModel } from '@/domain/models'
+import { Authentication, CreateUserParams } from '@/domain/usecases'
 
 import faker from 'faker'
 

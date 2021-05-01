@@ -1,5 +1,5 @@
 import { MongoHelper } from '@/infra/db/mongo-helper'
-import { CheckUserByEmailRepository, CreateUserRepository, LoadUserByEmailRepository } from '@/data/protocols/db'
+import { CheckUserByEmailRepository, CreateUserRepository, LoadUserByEmailRepository } from '@/data/protocols'
 import { CreateUserParams } from '@/domain/usecases'
 import { UserModel } from '@/domain/models'
 

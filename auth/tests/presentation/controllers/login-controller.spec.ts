@@ -1,8 +1,8 @@
-import { AuthenticationSpy, ValidationSpy } from '@/tests/presentation/mocks'
-import { mockAuthenticationParams } from '@/tests/domain/mocks'
 import { LoginController } from '@/presentation/controllers'
 import { HttpRequest } from '@/presentation/protocols'
 import { badRequest, ok, serverError, unauthorized } from '@/presentation/helpers'
+import { AuthenticationSpy, ValidationSpy } from '@/tests/presentation/mocks'
+import { mockAuthenticationParams } from '@/tests/domain/mocks'
 
 const authenticationParams = mockAuthenticationParams()
 

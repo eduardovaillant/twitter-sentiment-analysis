@@ -1,10 +1,10 @@
-import { mockCreateUser, AuthenticationSpy, ValidationSpy } from '@/tests/presentation/mocks'
-import { mockCreateUserParams } from '@/tests/domain/mocks'
 import { CreateUserController } from '@/presentation/controllers'
 import { HttpRequest } from '@/presentation/protocols'
 import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers'
 import { EmailInUseError } from '@/presentation/errors'
 import { CreateUser } from '@/domain/usecases'
+import { mockCreateUserParams } from '@/tests/domain/mocks'
+import { mockCreateUser, AuthenticationSpy, ValidationSpy } from '@/tests/presentation/mocks'
 
 type SutTypes = {
   sut: CreateUserController

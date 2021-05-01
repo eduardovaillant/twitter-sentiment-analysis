@@ -1,4 +1,4 @@
-import { CheckUserByEmailRepository, CreateUserRepository, LoadUserByEmailRepository } from '@/data/protocols/db'
+import { CheckUserByEmailRepository, CreateUserRepository, LoadUserByEmailRepository } from '@/data/protocols'
 import { UserModel } from '@/domain/models'
 import { CreateUserParams } from '@/domain/usecases'
 import { mockUserModel } from '@/tests/domain/mocks'
