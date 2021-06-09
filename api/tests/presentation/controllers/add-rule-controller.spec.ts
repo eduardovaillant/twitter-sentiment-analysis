@@ -1,8 +1,9 @@
+import { AddRuleSpy, ValidationSpy } from '@/tests/presentation/mocks'
+import { mockAddRuleParams, mockRuleModel } from '@/tests/domain/mocks'
+
 import { AddRuleController } from '@/presentation/controllers'
 import { HttpRequest } from '@/presentation/protocols'
-import { mockAddRuleParams, mockRuleModel } from '@/tests/domain/mocks'
 import { badRequest, created, serverError } from '@/presentation/helpers'
-import { AddRuleSpy, ValidationSpy } from '@/tests/presentation/mocks'
 
 const mockRequest = (body: any): HttpRequest => ({
   body
