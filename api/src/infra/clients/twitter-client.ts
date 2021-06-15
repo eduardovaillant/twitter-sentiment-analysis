@@ -1,6 +1,6 @@
 
 import { HttpPost, TwitterAddRule, TwitterAddRuleResponse } from '@/data/protocols/adapters'
-import { AddRuleModel } from '@/domain/usecases'
+import { AddRuleParams } from '@/domain/usecases'
 
 import env from '@/main/config/env'
 
@@ -11,7 +11,7 @@ export class TwitterClient implements TwitterAddRule {
     private readonly httpPost: HttpPost
   ) {}
 
-  async addRule (rule: AddRuleModel): Promise<TwitterAddRuleResponse> {
+  async addRule (rule: AddRuleParams): Promise<TwitterAddRuleResponse> {
     const config = { headers: { Authorization: `Bearer ${env.bearerToken}` } }
     const body = {
       add: [
