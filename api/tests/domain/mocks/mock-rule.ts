@@ -1,3 +1,4 @@
+import { TwitterAddRuleResponse } from '@/data/protocols'
 import { RuleModel } from '@/domain/models'
 import { AddRuleParams } from '@/domain/usecases/add-rule'
 
@@ -12,6 +13,15 @@ export const mockRuleModel = (): RuleModel => (
 
 export const mockAddRuleParams = (): AddRuleParams => (
   {
-    value: 'any_value'
+    value: 'any_value',
+    tag: 'any_tag'
+  }
+)
+
+export const mockAddRuleResponse = (): TwitterAddRuleResponse => (
+  {
+    value: 'any_value',
+    tag: 'any_tag',
+    twitter_rule_id: 'any_id'
   }
 )
