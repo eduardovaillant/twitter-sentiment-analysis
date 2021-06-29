@@ -1,7 +1,6 @@
 
 import { HttpPost, TwitterAddRule, TwitterAddRuleResponse } from '@/data/protocols/adapters'
 import { AddRuleParams } from '@/domain/usecases'
-
 import env from '@/main/config/env'
 
 // TODO return an error if the api call is not successfull
