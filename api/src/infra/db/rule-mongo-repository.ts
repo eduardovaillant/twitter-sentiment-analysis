@@ -12,6 +12,6 @@ export class RuleMongoRepository implements AddRuleRepository, LoadRuleByValueRe
   async loadByValue (value: string): Promise<RuleModel> {
     const rulesCollection = await MongoHelper.getCollection('rules')
     const result = await rulesCollection.findOne({ value: value })
-    return MongoHelper.map(result)
+    return result ? MongoHelper.map(result) : null
   }
 }
