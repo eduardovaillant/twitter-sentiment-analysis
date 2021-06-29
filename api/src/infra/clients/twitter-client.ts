@@ -22,6 +22,9 @@ export class TwitterClient implements TwitterAddRule {
       ]
     }
     const result = await this.httpPost.post(env.twitterBaseUrl + 'tweets/search/stream/rules', body, config)
+
+    console.log(result)
+
     const twitterAddRuleResponse: TwitterAddRuleResponse = {
       twitter_rule_id: result.data.data[0].id,
       value: result.data.data[0].value,
