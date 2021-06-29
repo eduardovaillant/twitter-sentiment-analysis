@@ -31,6 +31,13 @@ describe('DbAddRule', () => {
     expect(loadRuleByValueRepositorySpy.value).toBe(mockAddRuleParams().value)
   })
 
+  test('should throw if LoadRuleByValueRepository throws', async () => {
+    const { sut, loadRuleByValueRepositorySpy } = makeSut()
+    jest.spyOn(loadRuleByValueRepositorySpy, 'loadByValue').mockImplementationOnce(() => { throw new Error() })
+    const promise = sut.add(mockAddRuleParams())
+    await expect(promise).rejects.toThrow()
+  })
+
   test('should call the TwitterAddRule with correct values', async () => {
     const { sut, twitterAddRuleStub } = makeSut()
     const addRuleSpy = jest.spyOn(twitterAddRuleStub, 'addRule')
