@@ -53,5 +53,12 @@ describe('TweetRepository', () => {
       expect(rule.value).toBe('any_value')
       expect(rule.twitter_rule_id).toBe('any_id')
     })
+
+    test('should return null if no rule was founded', async () => {
+      const sut = makeSut()
+      await rulesCollection.insertOne(mockTwitterAddRuleResponse())
+      const rule = await sut.loadByValue('diferent_name')
+      expect(rule).toBeNull()
+    })
   })
 })
