@@ -11,7 +11,9 @@ export class DbAddRule implements AddRule {
   ) {}
 
   async add (rule: AddRuleParams): Promise<RuleModel> {
-    await this.loadRuleByValueRepository.loadByValue(rule.value)
+    const loadedRule = await this.loadRuleByValueRepository.loadByValue(rule.value)
+
+    if (loadedRule) return loadedRule
 
     const twitterResponse = await this.twitterClient.addRule(rule)
     const createdRule = await this.addRuleRepository.addRule(twitterResponse)
