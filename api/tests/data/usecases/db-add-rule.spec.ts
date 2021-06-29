@@ -38,29 +38,39 @@ describe('DbAddRule', () => {
     await expect(promise).rejects.toThrow()
   })
 
+  test('should return the rule if LoadRuleByValueRepository returns a rule', async () => {
+    const { sut } = makeSut()
+    const rule = await sut.add(mockAddRuleParams())
+    expect(rule).toEqual(mockRuleModel())
+  })
+
   test('should call the TwitterAddRule with correct values', async () => {
-    const { sut, twitterAddRuleStub } = makeSut()
+    const { sut, twitterAddRuleStub, loadRuleByValueRepositorySpy } = makeSut()
+    loadRuleByValueRepositorySpy.ruleModel = null
     const addRuleSpy = jest.spyOn(twitterAddRuleStub, 'addRule')
     await sut.add(mockAddRuleParams())
     expect(addRuleSpy).toHaveBeenCalledWith(mockAddRuleParams())
   })
 
   test('should throw if TwitterAddRule throws', async () => {
-    const { sut, twitterAddRuleStub } = makeSut()
+    const { sut, twitterAddRuleStub, loadRuleByValueRepositorySpy } = makeSut()
+    loadRuleByValueRepositorySpy.ruleModel = null
     jest.spyOn(twitterAddRuleStub, 'addRule').mockImplementationOnce(() => { throw new Error() })
     const promise = sut.add(mockAddRuleParams())
     await expect(promise).rejects.toThrow()
   })
 
   test('should call the AddRuleRepository with correct values', async () => {
-    const { sut, addRuleRepositoryStub } = makeSut()
+    const { sut, addRuleRepositoryStub, loadRuleByValueRepositorySpy } = makeSut()
+    loadRuleByValueRepositorySpy.ruleModel = null
     const addRuleSpy = jest.spyOn(addRuleRepositoryStub, 'addRule')
     await sut.add(mockAddRuleParams())
     expect(addRuleSpy).toHaveBeenCalledWith(mockAddRuleResponse())
   })
 
   test('should throw if AddRuleRepository throws', async () => {
-    const { sut, addRuleRepositoryStub } = makeSut()
+    const { sut, addRuleRepositoryStub, loadRuleByValueRepositorySpy } = makeSut()
+    loadRuleByValueRepositorySpy.ruleModel = null
     jest.spyOn(addRuleRepositoryStub, 'addRule').mockImplementationOnce(() => { throw new Error() })
     const promise = sut.add(mockAddRuleParams())
     await expect(promise).rejects.toThrow()
