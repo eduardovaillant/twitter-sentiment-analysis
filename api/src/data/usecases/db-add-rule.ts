@@ -3,7 +3,7 @@ import { AddRuleRepository } from '@/data/protocols/db/'
 import { RuleModel } from '@/domain/models'
 import { AddRule, AddRuleParams } from '@/domain/usecases'
 
-export class AddRuleImpl implements AddRule {
+export class DbAddRule implements AddRule {
   constructor (
     private readonly twitterClient: TwitterAddRule,
     private readonly addRuleRepository: AddRuleRepository

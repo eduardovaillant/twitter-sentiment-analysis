@@ -1,10 +1,10 @@
-import { AddRuleImpl } from '@/data/usecases'
+import { DbAddRule } from '@/data/usecases'
 import { TwitterAddRule, AddRuleRepository } from '@/data/protocols'
 import { mockAddRuleRepository, mockTwitterAddRule } from '@/tests/data/mocks/mock-add-rule'
 import { mockAddRuleParams, mockAddRuleResponse, mockRuleModel } from '@/tests/domain/mocks'
 
 type SutTypes = {
-  sut: AddRuleImpl
+  sut: DbAddRule
   twitterAddRuleStub: TwitterAddRule
   addRuleRepositoryStub: AddRuleRepository
 }
@@ -12,7 +12,7 @@ type SutTypes = {
 const makeSut = (): SutTypes => {
   const twitterAddRuleStub = mockTwitterAddRule()
   const addRuleRepositoryStub = mockAddRuleRepository()
-  const sut = new AddRuleImpl(twitterAddRuleStub, addRuleRepositoryStub)
+  const sut = new DbAddRule(twitterAddRuleStub, addRuleRepositoryStub)
   return {
     sut,
     twitterAddRuleStub,
@@ -20,7 +20,7 @@ const makeSut = (): SutTypes => {
   }
 }
 
-describe('AddRuleImpl', () => {
+describe('DbAddRule', () => {
   test('should call the TwitterAddRule with correct values', async () => {
     const { sut, twitterAddRuleStub } = makeSut()
     const addRuleSpy = jest.spyOn(twitterAddRuleStub, 'addRule')
