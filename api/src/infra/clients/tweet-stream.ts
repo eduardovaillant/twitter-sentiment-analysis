@@ -1,4 +1,3 @@
-import { TweetModel } from '@/domain/models'
 import { MessageBroker } from '@/infra/adapters'
 import env from '@/main/config/env'
 
@@ -12,7 +11,8 @@ export class TweetStream {
 
   async start (): Promise<void> {
     const config = { headers: { Authorization: `Bearer ${env.bearerToken}` } }
-    const streamUrl = 'https://api.twitter.com/2/tweets/search/stream'
+    const expansions = '?tweet.fields=created_at,lang&expansions=author_id&user.fields=created_at,description,profile_image_url,public_metrics,url'
+    const streamUrl = 'https://api.twitter.com/2/tweets/search/stream' + expansions
 
     const stream = needle.get(streamUrl, config)
 
@@ -20,9 +20,11 @@ export class TweetStream {
       try {
         const json = JSON.parse(data)
 
-        const tweet: TweetModel = {
+        const tweet = {
           id: json.data.id,
           text: json.data.text,
+          author_id: json.data.author_id,
+          user: json.includes.users.filter(user => user.id === json.data.author_id),
           matching_rules: json.matching_rules
         }
 
