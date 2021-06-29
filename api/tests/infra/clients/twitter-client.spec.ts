@@ -18,7 +18,7 @@ const makeFakeTwitterResponse = (): any => (
 const makeFakeTwitterAddRuleResponse = (): TwitterAddRuleResponse => ({
   value: 'any_value',
   tag: 'any_tag',
-  twitter_rule_id: 'any_id'
+  twitter_id: 'any_id'
 })
 
 const makeFakeAddRule = (): AddRuleParams => (
@@ -70,7 +70,7 @@ describe('TwitterClient', () => {
       const { sut, httpPostStub } = makeSut()
       const postSpy = jest.spyOn(httpPostStub, 'post')
       await sut.addRule(makeFakeAddRule())
-      expect(postSpy).toHaveBeenCalledWith(env.baseUrl + 'tweets/search/stream/rules', makeFakeTwitterAddRuleBody(), config)
+      expect(postSpy).toHaveBeenCalledWith(env.twitterBaseUrl + 'tweets/search/stream/rules', makeFakeTwitterAddRuleBody(), config)
     })
 
     test('should set the rule.tag to an empty string if no tag is provided', async () => {

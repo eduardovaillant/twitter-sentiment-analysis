@@ -9,7 +9,7 @@ export const mockAddRuleRepository = (): AddRuleRepository => {
         id: 'any_id',
         value: 'any_value',
         tag: 'any_tag',
-        twitter_rule_id: 'any_id'
+        twitter_id: 'any_id'
       }
     }
   }
@@ -22,7 +22,7 @@ export const mockTwitterAddRule = (): TwitterAddRule => {
       return {
         value: 'any_value',
         tag: 'any_tag',
-        twitter_rule_id: 'any_id'
+        twitter_id: 'any_id'
       }
     }
   }

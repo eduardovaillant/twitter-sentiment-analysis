@@ -8,7 +8,7 @@ const mockTwitterAddRuleResponse = (): TwitterAddRuleResponse => (
   {
     value: 'any_value',
     tag: 'any_tag',
-    twitter_rule_id: 'any_id'
+    twitter_id: 'any_id'
   }
 )
 
@@ -38,7 +38,7 @@ describe('TweetRepository', () => {
       expect(rule.id).toBeTruthy()
       expect(rule.tag).toBe('any_tag')
       expect(rule.value).toBe('any_value')
-      expect(rule.twitter_rule_id).toBe('any_id')
+      expect(rule.twitter_id).toBe('any_id')
     })
   })
 
@@ -51,7 +51,7 @@ describe('TweetRepository', () => {
       expect(rule.id).toBeTruthy()
       expect(rule.tag).toBe('any_tag')
       expect(rule.value).toBe('any_value')
-      expect(rule.twitter_rule_id).toBe('any_id')
+      expect(rule.twitter_id).toBe('any_id')
     })
 
     test('should return null if no rule was founded', async () => {

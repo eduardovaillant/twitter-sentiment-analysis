@@ -7,7 +7,7 @@ export const mockRuleModel = (): RuleModel => (
     id: 'any_id',
     value: 'any_value',
     tag: 'any_tag',
-    twitter_rule_id: 'any_id'
+    twitter_id: 'any_id'
   }
 )
 
@@ -22,6 +22,6 @@ export const mockAddRuleResponse = (): TwitterAddRuleResponse => (
   {
     value: 'any_value',
     tag: 'any_tag',
-    twitter_rule_id: 'any_id'
+    twitter_id: 'any_id'
   }
 )
